@@ -121,9 +121,10 @@ def create_post(request, username):
         title = request.POST.get("title")
         content = request.POST.get("content")
         image = request.FILES.get("image")
+        cloudinary_upload = cloudinary.uploader.upload(image)
         author = user
 
-        Post.objects.create(title=title, content=content, image=image, author=author)
+        Post.objects.create(title=title, content=content, image=cloudinary_upload['url'], author=author)
         return redirect(f"/{request.user}/my_posts/")
 
     context = {
