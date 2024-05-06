@@ -1,3 +1,4 @@
+import cloudinary.uploader
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -6,7 +7,7 @@ from django.contrib.auth.models import User
 from users.models import UserProfile
 from .models import Post, Like, Comment
 from django.dispatch import receiver
-import os
+import cloudinary
 
 
 # Create your views here.
@@ -139,10 +140,7 @@ def delete_post(request, id):
     post = Post.objects.get(id=id)
 
     if post.image:
-        image_path = os.path.join(settings.MEDIA_ROOT, str(post.image))
-        if os.path.exists(image_path):
-            os.remove(image_path)
-
+        cloudinary.uploader.destroy(post.image.public_id, invalidate=True)
     post.delete()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 

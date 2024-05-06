@@ -164,11 +164,30 @@
                   <p class="text-sm mb-2">{{ post.content|truncatechars:50 }}</p>
                 </div>
                 {% if post.image %}
-                  <img
+                  {% comment %} <img
                     src="{{ post.image.url }}"
                     alt="{{ post.title }} image"
                     class="w-full h-auto mb-4 rounded-lg"
-                  />
+                  /> {% endcomment %}
+                  {% if post.image.url|slice:'-4:' == '.jpg' or post.image.url|slice:'-5:' == '.jpeg' %}
+                      <!-- Image -->
+                      <img src="{{ post.image.url }} class="w-full h-auto mb-4 rounded-lg"">
+                  {% elif post.image.url|slice:'-4:' == '.png' %}
+                      <!-- Image -->
+                      <img src="{{ post.image.url }}" class="w-full h-auto mb-4 rounded-lg">
+                  {% elif post.image.url|slice:'-4:' == '.gif' %}
+                      <!-- Image -->
+                      <img src="{{ post.image.url }}" class="w-full h-auto mb-4 rounded-lg">
+                  {% elif post.image.url|slice:'-4:' == '.mp4' %}
+                      <!-- Video -->
+                      <video controls class="w-full h-auto mb-4 rounded-lg">
+                          <source src="{{ post.image.url }}" type="video/mp4">
+                          Your browser does not support the video tag.
+                      </video>
+                  {% else %}
+                      <!-- Unknown or unsupported file type -->
+                      <p>Unsupported file type</p>
+                  {% endif %}
                 {% endif %}
                 <div class="interaction-buttons | flex flex-row justify-between">
                   <div class="like-container | flex items-center space-x-2">
