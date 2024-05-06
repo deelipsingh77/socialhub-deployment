@@ -15,6 +15,10 @@ import os
 from pathlib import Path
 from unittest.mock import Base
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,6 +34,7 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -42,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "users",
     "core",
+    "cloudinary",
 ]
 
 MIDDLEWARE = [
@@ -84,6 +90,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
 database_url = os.environ.get("DATABASE_URL")
 DATABASES["default"] = dj_database_url.parse(database_url)
 
@@ -132,3 +139,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+cloudinary.config(
+    cloud_name = os.environ.get("CLOUD_NAME"),
+    api_key = os.environ.get("API_KEY"),
+    api_secret = os.environ.get("API_SECRET"),
+)

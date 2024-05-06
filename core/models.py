@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import os
 import uuid
+from cloudinary.models import CloudinaryField
 
 
 def rename_image(instance, filename):
@@ -18,7 +19,7 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to=rename_image, blank=True
     )
-    # video_url = models.URLField(blank=True)  # Optional video URL field
+    image = CloudinaryField('Posts', folder='posts', null=True, blank=True)
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes_count = models.PositiveIntegerField(default=0)
