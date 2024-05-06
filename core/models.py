@@ -16,9 +16,6 @@ def rename_image(instance, filename):
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    image = models.ImageField(
-        upload_to=rename_image, blank=True
-    )
     image = CloudinaryField('Posts', folder='posts', null=True, blank=True)
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
