@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static "css/login.css" %}" />
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <h1>SocialHub</h1>
+      </section>
+      <section class="parent-container">
+        <div class="child-container">
+          {% if messages %}
+            {% for message in messages %}
+              <h3>{{message}}</h3>
+            {% endfor %}
+          {% endif %}
+          <div class="titles">
+            <h1>Login</h1>
+            <p>Don't Have an Account? <a href="{% url "register" %}">Sign Up</a></p>
+          </div>
+          <form method="post" id="form-container">
+            {% csrf_token %}
+            <div class="username-container">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Username"
+                required
+              />
+            </div>
+            <div class="password-container">
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <button type="submit" class="login-button">Login</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

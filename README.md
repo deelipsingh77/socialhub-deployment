@@ -1,2 +1,2 @@
-# socialhub-deployment
-socialhub-deployment-repo
+# socialhub
+Content Management System
