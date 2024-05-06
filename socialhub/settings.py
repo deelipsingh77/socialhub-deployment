@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import dj_database_url
 from pathlib import Path
 from unittest.mock import Base
 
@@ -83,6 +84,7 @@ DATABASES = {
     }
 }
 
+DATABASES["default"] = dj_database_url.parse("postgres://socialhub_django_user:BhyzYW3c1hE3CdgpAW7jpga7ZR8gGH8K@dpg-cosaej20si5c739s161g-a.singapore-postgres.render.com/socialhub_django")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
