@@ -54,10 +54,6 @@ def my_profile(request, username):
     all_followings = get_followings(user_profile)
     all_users = UserProfile.objects.all()
 
-  
-
- 
-
     context = {
         "user": user,
         "user_profile": user_profile,
@@ -121,10 +117,9 @@ def create_post(request, username):
         title = request.POST.get("title")
         content = request.POST.get("content")
         image = request.FILES.get("image")
-        cloudinary_upload = cloudinary.uploader.upload(image)
         author = user
 
-        Post.objects.create(title=title, content=content, image=cloudinary_upload['url'], author=author)
+        Post.objects.create(title=title, content=content, image=image, author=author)
         return redirect(f"/{request.user}/my_posts/")
 
     context = {
@@ -266,9 +261,6 @@ def others_profile_page(request,otheruser):
 
     other_user=User.objects.get(username=otheruser)
     others_profile=UserProfile.objects.get(user=other_user)
-
-    
-
 
     context = {
         "user": user,
