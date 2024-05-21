@@ -1,18 +1,20 @@
 import cloudinary.uploader
 from django.conf import settings
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from users.models import UserProfile
 from .models import Post, Like, Comment
+from django.contrib.auth import authenticate
+from django.contrib import messages
 from django.dispatch import receiver
+import os
 import cloudinary
+import requests
 
 
 # Create your views here.
-
-
 def get_followings(user_profile):
     all_followers = user_profile.followers.all()
     all_followings = []
@@ -21,7 +23,49 @@ def get_followings(user_profile):
     return all_followings
 
 
-@login_required(login_url="/login/")
+def fetch_api_data(request, type):
+    api_key = "pub_436579ec8dff124afcaf5df2105bd70466ea5"
+    url = f"https://newsdata.io/api/1/news?apikey={api_key}&q={type}&language=en"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        return data
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+@login_required(login_url="/landing/")
+def delete_account(request):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    posts = Post.objects.all().order_by("-pub_date")
+    comments = Comment.objects.all()
+    likes = Like.objects.filter(user=user)
+    all_followings = get_followings(user_profile)
+    all_users = UserProfile.objects.all()
+
+    if(request.method=="POST"):
+        password=request.POST.get("password")
+        user = authenticate(username=request.user.username, password=password)
+        if user:
+            user.delete()
+            messages.warning(request,"You account is succesfully deleted")
+            return redirect("/landing/")
+        else:
+            messages.error(request,"Worng password")
+    context = {
+        "user": user,
+        "user_profile": user_profile,
+        "posts": posts,
+        "comments": comments,
+        "likes": likes,
+        "following_profiles": all_followings,
+        "all_users": all_users,
+    }
+
+    return render(request, "delete_account.html", context)
+
+@login_required(login_url="/landing/")
 def home(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -44,7 +88,7 @@ def home(request, username):
     return render(request, "home.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def my_profile(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -67,12 +111,18 @@ def my_profile(request, username):
     return render(request, "myprofile.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def search_page(request, username):
+    all_users = UserProfile.objects.all()
+    if request.method == "POST":
+        search = request.POST.get("search")
+        if search: 
+            user_profiles = UserProfile.objects.filter(user__username__icontains=search)
+            if user_profiles:
+                all_users=user_profiles
+            
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
-    all_users = UserProfile.objects.all()
-
     all_followings = get_followings(user_profile)
     context = {
         "user": user,
@@ -83,7 +133,7 @@ def search_page(request, username):
     return render(request, "search.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def my_posts(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -106,7 +156,7 @@ def my_posts(request, username):
     return render(request, "posts.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def create_post(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -131,17 +181,20 @@ def create_post(request, username):
     return render(request, "create_post.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def delete_post(request, id):
     post = Post.objects.get(id=id)
-
+   
     if post.image:
-        cloudinary.uploader.destroy(post.image.public_id, invalidate=True)
+        image_path = os.path.join(settings.MEDIA_ROOT, str(post.image))
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
     post.delete()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def like_post(request, id):
     user = request.user
     post = Post.objects.get(id=id)
@@ -159,7 +212,7 @@ def like_post(request, id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def comment_post(request, id):
     content = request.POST.get("content")
     post = Post.objects.get(id=id)
@@ -170,7 +223,7 @@ def comment_post(request, id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def follow_unfollow_user(request, username):
     to_follow = User.objects.get(username=username)
     user_profile = UserProfile.objects.get(user=request.user)
@@ -184,7 +237,7 @@ def follow_unfollow_user(request, username):
     # return redirect(f'/{request.user}/search/?{show_follow}')
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def edit_profile(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -216,7 +269,7 @@ def edit_profile(request, username):
     return render(request, "edit_profile.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def notifications_page(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -233,7 +286,7 @@ def notifications_page(request, username):
     return render(request, "notifications.html", context)
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/landing/")
 def chat_page(request, username):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -249,8 +302,8 @@ def chat_page(request, username):
     return render(request, "chat.html", context)
 
 
-@login_required(login_url="/login/")
-def others_profile_page(request,otheruser):
+@login_required(login_url="/landing/")
+def others_profile_page(request, otheruser):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     posts = Post.objects.all().order_by("-pub_date")
@@ -259,8 +312,8 @@ def others_profile_page(request,otheruser):
     all_followings = get_followings(user_profile)
     all_users = UserProfile.objects.all()
 
-    other_user=User.objects.get(username=otheruser)
-    others_profile=UserProfile.objects.get(user=other_user)
+    other_user = User.objects.get(username=otheruser)
+    others_profile = UserProfile.objects.get(user=other_user)
 
     context = {
         "user": user,
@@ -270,7 +323,64 @@ def others_profile_page(request,otheruser):
         "likes": likes,
         "following_profiles": all_followings,
         "all_users": all_users,
-        "others_profile":others_profile,
+        "others_profile": others_profile,
     }
 
-    return render(request,"othersprofile.html",context)
+    return render(request, "othersprofile.html", context)
+
+
+@login_required(login_url="/landing/")
+def entertainment_feeds(request, username):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    all_users = UserProfile.objects.all()
+    all_followings = get_followings(user_profile)
+    feeds_data = fetch_api_data(request, "entertainment")
+
+    context = {
+        "user": user,
+        "user_profile": user_profile,
+        "following_profiles": all_followings,
+        "all_users": all_users,
+        "feeds_data": feeds_data,
+    }
+
+    return render(request, "feeds.html", context)
+
+
+@login_required(login_url="/landing/")
+def foods_feeds(request, username):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    all_users = UserProfile.objects.all()
+    all_followings = get_followings(user_profile)
+    feeds_data = fetch_api_data(request, "food")
+
+    context = {
+        "user": user,
+        "user_profile": user_profile,
+        "following_profiles": all_followings,
+        "all_users": all_users,
+        "feeds_data": feeds_data,
+    }
+
+    return render(request, "foods_feeds.html", context)
+
+
+@login_required(login_url="/landing/")
+def education_feeds(request, username):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    all_users = UserProfile.objects.all()
+    all_followings = get_followings(user_profile)
+    feeds_data = fetch_api_data(request, "education")
+
+    context = {
+        "user": user,
+        "user_profile": user_profile,
+        "following_profiles": all_followings,
+        "all_users": all_users,
+        "feeds_data": feeds_data,
+    }
+
+    return render(request, "education_feeds.html", context)
