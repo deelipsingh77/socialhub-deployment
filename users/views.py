@@ -59,7 +59,7 @@ def register_page(request):
 
         UserProfile.objects.create(
             user=user,
-            profile_pic="https://pixabay.com/get/g4d9249f2719549e599655433fde32c4a91e0dbdf75b1907ab5623fc542afeaba66bc2bf5f30a86738adcf50ccc41dbdf.svg",
+            profile_pic="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi",
         )
 
         messages.success(request, "Registration Successful. You can now login.")
