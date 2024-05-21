@@ -186,10 +186,7 @@ def delete_post(request, id):
     post = Post.objects.get(id=id)
    
     if post.image:
-        image_path = os.path.join(settings.MEDIA_ROOT, str(post.image))
-        if os.path.exists(image_path):
-            os.remove(image_path)
-
+        cloudinary.uploader.destroy(post.image.public_id, invalidate=True)
     post.delete()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 

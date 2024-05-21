@@ -16,7 +16,7 @@
   {% if all_users %}
     {% for user in all_users %}
       {% if user.user != request.user %}
-        <div data-aos="fade-left" class="hover:pointer bg-gradient-to-br from-blue-200 to-purple-200 rounded-lg mb-5 p-5 flex justify-between items-center">
+        <div class="hover:pointer bg-gradient-to-br from-blue-200 to-purple-200 rounded-lg mb-5 p-5 flex justify-between items-center">
           <a href="/{{ user }}/others_profile_page/" class="flex items-center gap-4">
             <img class="rounded-full w-24 h-24 object-cover object-top" src="{{ user.profile_pic.url }}" alt="" />
             <div>
