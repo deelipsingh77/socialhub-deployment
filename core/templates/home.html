@@ -92,20 +92,6 @@
             <span class="h-9 w-9 rounded-full bg-gradient-to-r from-cyan-400 to-teal-500 p-1 flex justify-center items-center"><i class="fa-solid fa-square-plus"></i></span>
             <span>Create Post</span>
           </a>
-
-          <div class="relative inline-block">
-            <button id="dropdownToggle" class="text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded inline-flex items-center">
-              <span>Feeds</span>
-              <svg class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
-            <div id="dropdownMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition duration-300 transform origin-top">
-              <a href="/{{ user.username }}/entertainment_feeds" onclick="entertainment()" class="feed-link block px-4 py-2 text-gray-800 hover:bg-gray-200">Entertainment</a>
-              <a href="/{{ user.username }}/education_feeds" onclick="education()" id="education" class="feed-link block px-4 py-2 text-gray-800 hover:bg-gray-200">Education</a>
-              <a href="/{{ user.username }}/foods_feeds" onclick="food()" id="foods" class="feed-link block px-4 py-2 text-gray-800 hover:bg-gray-200">Food</a>
-            </div>
-          </div>
         </nav>
         <div id="logout">
           <a class="active_page flex items-center gap-3 p-2 hover:bg-red-300 rounded-3xl w-44 hover:scale-[1.1] duration-150" href="{% url 'logout' %}">

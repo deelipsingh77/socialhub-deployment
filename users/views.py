@@ -57,7 +57,10 @@ def register_page(request):
             messages.error(request, "Please fill all the deatails !!!")
             return redirect("landing")
 
-        UserProfile.objects.create(user=user)
+        UserProfile.objects.create(
+            user=user,
+            profile_pic="https://pixabay.com/get/g4d9249f2719549e599655433fde32c4a91e0dbdf75b1907ab5623fc542afeaba66bc2bf5f30a86738adcf50ccc41dbdf.svg",
+        )
 
         messages.success(request, "Registration Successful. You can now login.")
         return redirect("/landing/")
