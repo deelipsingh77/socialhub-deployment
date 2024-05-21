@@ -11,8 +11,11 @@
       <div class="flex items-center mb-2">
         {% for posting_user in all_users %}
         {% if post.author.username == posting_user.user.username %}
-        <img src="{{ posting_user.profile_pic.url }}" alt="{{ post.author.username }}"
-          class="w-12 h-12 rounded-full mr-4" />
+          {% if posting_user.profile_pic.url %}
+            <img src="{{ posting_user.profile_pic.url }}" alt="{{ post.author.username }}" class="w-12 h-12 rounded-full mr-4" />
+          {% else %}
+            <img src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="{{ post.author.username }}" class="w-12 h-12 rounded-full mr-4" />
+          {% endif %}
         {% endif %}
         {% endfor %}
         <div>
@@ -70,8 +73,11 @@
           <div class="flex-shrink-0">
             {% for commenting_user in all_users %}
             {% if comment.author.username == commenting_user.user.username %}
-            <img src="{{ commenting_user.profile_pic.url }}" alt="{{ comment.author.username }}"
-              class="w-8 h-8 rounded-full" />
+              {% if commenting_user.profile_pic.url %}
+                <img src="{{ commenting_user.profile_pic.url }}" alt="{{ comment.author.username }}" class="w-8 h-8 rounded-full" />
+              {% else %}
+                <img src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="{{ comment.author.username }}" class="w-8 h-8 rounded-full" />
+              {% endif %}
             {% endif %}
             {% endfor %}
           </div>

@@ -62,7 +62,13 @@
             </div>
           </a>
           <div id="profile-pic" class="h-9 w-9 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 overflow-hidden">
-            <a href="/{{ user.username }}/my_profile/"><img class="rounded-full" src="{{ user_profile.profile_pic.url }}" alt="" /></a>
+            <a href="/{{ user.username }}/my_profile/">
+              {% if user_profile.profile_pic.url %}
+                <img class="rounded-full" src="{{ user_profile.profile_pic.url }}" alt="" />
+              {% else %}
+                <img class="rounded-full" src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="" />
+              {% endif %}
+            </a>
           </div>
         </div>
       </div>
@@ -109,7 +115,11 @@
                 <div class="flex items-center mb-2">
                   {% for posting_user in all_users %}
                     {% if post.author.username == posting_user.user.username %}
-                      <img src="{{ posting_user.profile_pic.url }}" alt="{{ post.author.username }}" class="w-12 h-12 rounded-full mr-4" />
+                      {% if posting_user.profile_pic.url %}
+                        <img src="{{ posting_user.profile_pic.url }}" alt="{{ post.author.username }}" class="w-12 h-12 rounded-full mr-4" />
+                      {% else %}
+                        <img src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="{{ post.author.username }}" class="w-12 h-12 rounded-full mr-4" />
+                      {% endif %}
                     {% endif %}
                   {% endfor %}
                   <div>
@@ -160,7 +170,11 @@
                           <div class="flex-shrink-0">
                             {% for commenting_user in all_users %}
                               {% if comment.author.username == commenting_user.user.username %}
-                                <img src="{{ commenting_user.profile_pic.url }}" alt="{{ comment.author.username }}" class="w-8 h-8 rounded-full" />
+                                {% if commenting_user.profile_pic.url %}
+                                  <img src="{{ commenting_user.profile_pic.url }}" alt="{{ comment.author.username }}" class="w-8 h-8 rounded-full" />
+                                  {% else %}
+                                  <img src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="{{ comment.author.username }}" class="w-8 h-8 rounded-full" />
+                                {% endif %}
                               {% endif %}
                             {% endfor %}
                           </div>
@@ -197,8 +211,12 @@
           {% if following_profiles %}
             {% for following_profile in following_profiles %}
               <div class="w-full flex bg-blue-200 px-4 py-4 rounded-md mb-5">
-                <div class="h-9 w-9 object-top rounded-full bg-purple-400 overflow-hidden">
-                  <img class="rounded-full" src="{{ following_profile.profile_pic.url }}" alt="" />
+                <div class="h-8 w-9 object-top rounded-full bg-purple-400 overflow-hidden">
+                  {% if following_profile.profile_pic.url %}
+                    <img class="rounded-full" src="{{ following_profile.profile_pic.url }}" alt="" />
+                  {% else %}
+                    <img class="rounded-full" src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="profile" />
+                  {% endif %}
                 </div>
                 <div class="flex justify-between w-full ml-2 items-center">
                   <h4 class="text-gray-800">{{ following_profile.user.username }}</h4>
@@ -218,8 +236,12 @@
               {% if user.user != request.user %}
                 {% if user not in following_profiles %}
                   <div class="w-full flex bg-purple-100 px-4 py-4 mb-4 rounded-md">
-                    <div class="h-9 w-9 object-top rounded-full bg-blue-200 overflow-hidden">
-                      <img class="rounded-full" src="{{ user.profile_pic.url }}" alt="" />
+                    <div class="h-8 w-9 object-top rounded-full bg-blue-200 overflow-hidden">
+                      {% if user.profile_pic.url %}
+                        <img class="rounded-full" src="{{ user.profile_pic.url }}" alt="" />
+                      {% else %}
+                        <img class="rounded-full" src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="" />
+                      {% endif %}
                     </div>
                     <div class="flex justify-between w-full ml-2 items-center">
                       <h4 class="text-gray-800">{{ user.user.username }}</h4>

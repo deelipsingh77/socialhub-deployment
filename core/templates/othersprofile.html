@@ -5,7 +5,11 @@
 {% block content %}
   <div class="flex flex-row w-full gap-3 border-b-2 border-slate-400 p-5 pb-10">
     <div class="">
-      <img class="h-56 w-56 rounded-full object-cover object-top" src="{{ others_profile.profile_pic.url }}" alt="" />
+      {% if others_profile.profile_pic.url %}
+        <img class="h-56 w-56 rounded-full object-cover object-top" src="{{ others_profile.profile_pic.url }}" alt="" />
+      {% else %}
+        <img class="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" src="{{ others_profile.profile_pic.url }}" alt="" />
+      {% endif %}
     </div>
     <div class="details-container | w-[70%] flex flex-col justify-around">
       <div class="user-details-container">

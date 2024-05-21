@@ -8,7 +8,7 @@ from cloudinary.models import CloudinaryField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = CloudinaryField('Profile Picture', folder='profile_pic', null=True, blank=True, default="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi")
+    profile_pic = CloudinaryField('Profile Picture', folder='profile_pic', null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     followers = models.ManyToManyField(User, related_name='following', blank=True)
 

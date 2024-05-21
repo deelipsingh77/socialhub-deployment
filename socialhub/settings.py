@@ -14,6 +14,7 @@ import dj_database_url
 import os
 from pathlib import Path
 from unittest.mock import Base
+from dotenv import load_dotenv
 
 import cloudinary
 import cloudinary.uploader
@@ -22,15 +23,17 @@ import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+if os.getenv('DJANGO_DEVELOPMENT') == 'True':
+    load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
@@ -89,7 +92,7 @@ DATABASES = {
     }
 }
 
-database_url = os.environ.get("DATABASE_URL")
+database_url = os.getenv("DATABASE_URL")
 DATABASES["default"] = dj_database_url.parse(database_url)
 
 # Password validation
@@ -128,8 +131,6 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -139,7 +140,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 cloudinary.config(
-    cloud_name = os.environ.get("CLOUD_NAME"),
-    api_key = os.environ.get("API_KEY"),
-    api_secret = os.environ.get("API_SECRET"),
+    cloud_name = os.getenv("CLOUD_NAME"),
+    api_key = os.getenv("API_KEY"),
+    api_secret = os.getenv("API_SECRET"),
 )

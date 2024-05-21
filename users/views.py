@@ -57,10 +57,7 @@ def register_page(request):
             messages.error(request, "Please fill all the deatails !!!")
             return redirect("landing")
 
-        UserProfile.objects.create(
-            user=user,
-            profile_pic="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi",
-        )
+        UserProfile.objects.create(user=user)
 
         messages.success(request, "Registration Successful. You can now login.")
         return redirect("/landing/")

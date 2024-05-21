@@ -18,7 +18,11 @@
       {% if user.user != request.user %}
         <div class="hover:pointer bg-gradient-to-br from-blue-200 to-purple-200 rounded-lg mb-5 p-5 flex justify-between items-center">
           <a href="/{{ user }}/others_profile_page/" class="flex items-center gap-4">
-            <img class="rounded-full w-24 h-24 object-cover object-top" src="{{ user.profile_pic.url }}" alt="" />
+              {% if user_profile.profile_pic.url %}
+                <img class="rounded-full w-24 h-24 object-cover object-top" src="{{ user.profile_pic.url }}" alt="" />
+              {% else %}
+                <img class="rounded-full w-24 h-24 object-cover object-top" src="https://res.cloudinary.com/dk9m0i2pg/image/upload/f_auto,q_auto/v1/profile_pic/wsftoet4mz3l9eqeysyi" alt="" />
+              {% endif %}
             <div>
               <h4 class="text-xl mb-2 font-semibold text-blue-700">{{ user.user.username }}</h4>
               {% if user.user.bio %}
